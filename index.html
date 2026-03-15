@@ -670,18 +670,13 @@
   <div class="hero-right">
     <div class="hero-products">
       <div class="product-card-hero">
-        <!-- placeholder jar visual via CSS -->
-        <div style="width:120px;height:120px;margin:0 auto 1rem;border-radius:50%;background:linear-gradient(135deg,#6b8f5e22,#6b8f5e44);display:flex;align-items:center;justify-content:center;">
-          <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#3a5233,#6b8f5e);box-shadow:0 6px 20px rgba(58,82,51,.3);"></div>
-        </div>
+        <img src="EVERGREEN-CREAM.png" alt="Evergreen Cream" style="width:160px;height:160px;object-fit:contain;margin-bottom:.8rem;" />
         <div class="pname">Evergreen Cream</div>
         <div class="ptag">Derin Yaralar</div>
         <div class="pbadge">Wound Care</div>
       </div>
       <div class="product-card-hero zn">
-        <div style="width:120px;height:120px;margin:0 auto 1rem;border-radius:50%;background:linear-gradient(135deg,#c8963c22,#c8963c44);display:flex;align-items:center;justify-content:center;">
-          <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#c8963c,#e8b85a);box-shadow:0 6px 20px rgba(200,150,60,.3);"></div>
-        </div>
+        <img src="ZN-CREAM.png" alt="Evergreen ZN Cream" style="width:160px;height:160px;object-fit:contain;margin-bottom:.8rem;" />
         <div class="pname">Evergreen ZN</div>
         <div class="ptag">Yanık & Yüzeyel Yaralar</div>
         <div class="pbadge">+ Çinko Oksit</div>
@@ -781,7 +776,7 @@
     <div class="prod-card reveal reveal-d1">
       <div class="prod-card-header">
         <span class="prod-tag green">Derin Yaralar</span>
-        <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#3a5233,#6b8f5e);box-shadow:0 4px 14px rgba(58,82,51,.25);"></div>
+        <img src="EVERGREEN-CREAM.png" alt="Evergreen Cream" style="width:80px;height:80px;object-fit:contain;" />
       </div>
       <h3>Evergreen<br/>Cream</h3>
       <div class="prod-subtitle">Skin Care Cream · 100 ml</div>
@@ -799,7 +794,7 @@
     <div class="prod-card reveal reveal-d2">
       <div class="prod-card-header">
         <span class="prod-tag amber">Yanık & Yüzeyel</span>
-        <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#c8963c,#e8b85a);box-shadow:0 4px 14px rgba(200,150,60,.25);"></div>
+        <img src="ZN-CREAM.png" alt="Evergreen ZN Cream" style="width:80px;height:80px;object-fit:contain;" />
       </div>
       <h3>Evergreen<br/>ZN Cream</h3>
       <div class="prod-subtitle">Skin Care Cream · 100 ml</div>
@@ -963,7 +958,7 @@
       <div class="form-row">
         <div class="form-group">
           <label>Ad Soyad</label>
-          <input type="text" placeholder="Dr. Metin GÜNEŞ" />
+          <input type="text" placeholder="Dr. Ali Güneş" />
         </div>
         <div class="form-group">
           <label>Kurум / Uzmanlık</label>
@@ -987,8 +982,8 @@
         <label>Mesaj</label>
         <textarea placeholder="Mesajınızı yazın…"></textarea>
       </div>
-      <button class="btn-primary" style="border:none;cursor:pointer;align-self:flex-start;" onclick="alert('Mesajınız için teşekkürler!')">Gönder →</button>
-    </div>
+      <button type="submit" class="btn-primary" style="border:none;cursor:pointer;align-self:flex-start;">Gönder →</button>
+    </form>
   </div>
 </section>
 
@@ -1017,8 +1012,8 @@
   const passInput = document.getElementById('login-pass');
 
   function tryLogin() {
-    const u = userInput.value.trim();
-    const p = passInput.value;
+    const u = userInput.value.trim().toLowerCase();
+    const p = passInput.value.trim();
     if (u === CREDENTIALS.user && p === CREDENTIALS.pass) {
       sessionStorage.setItem('eg_auth', '1');
       errorMsg.classList.remove('show');
