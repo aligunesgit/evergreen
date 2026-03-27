@@ -55,13 +55,13 @@
     .login-side {
       flex: 1;
       background: rgba(255,255,255,0.55);
-      backdrop-filter: blur(20px);
       border: 1px solid rgba(255,255,255,0.7);
       border-radius: 2.5rem;
       padding: 28px;
       height: 560px;
       display: flex; flex-direction: column; justify-content: flex-start; gap: 14px;
       animation: fadeUp .8s ease both;
+      overflow: hidden;
     }
     .login-side.left  { animation-delay: .05s; }
     .login-side.right { animation-delay: .15s; }
@@ -70,8 +70,8 @@
     .login-side.right { justify-content: flex-start; }
 
     .login-img {
-      border-radius: 1.8rem; overflow: hidden; position: relative;
-      height: 240px; flex-shrink: 0;
+      border-radius: 1.4rem; overflow: hidden; position: relative;
+      flex: 1; min-height: 0;
     }
     .ls-slide {
       position: absolute; inset: 0;
