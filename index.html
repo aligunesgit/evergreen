@@ -28,121 +28,193 @@
     #login-overlay {
       position: fixed; inset: 0; z-index: 9999;
       display: flex; align-items: center; justify-content: center;
-      background: var(--moss);
+      background: linear-gradient(135deg, #3a5233 0%, #4d6b44 50%, #2d4127 100%);
       overflow: hidden;
     }
 
-    #login-overlay .login-bg {
-      position: absolute; inset: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 70% 60% at 20% 20%, rgba(200,150,60,.12) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 70% at 80% 80%, rgba(0,0,0,.2) 0%, transparent 60%);
+    /* floating orb blur — matches screenshot's soft light */
+    .login-orb {
+      position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none;
     }
+    .login-orb1 { width: 500px; height: 500px; top: -100px; left: -100px; background: rgba(255,255,255,0.08); }
+    .login-orb2 { width: 400px; height: 400px; bottom: -80px; right: -80px; background: rgba(200,150,60,0.15); }
 
-    /* organic blobs */
-    #login-overlay .lb1 {
-      position: absolute; top: -15%; right: -10%;
-      width: 55vw; height: 55vw; max-width: 600px; max-height: 600px;
-      background: rgba(255,255,255,.04);
-      border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
-    }
-    #login-overlay .lb2 {
-      position: absolute; bottom: -20%; left: -10%;
-      width: 45vw; height: 45vw; max-width: 500px; max-height: 500px;
-      background: rgba(200,150,60,.07);
-      border-radius: 40% 60% 45% 55% / 60% 40% 55% 45%;
-    }
-
-    .login-card {
+    .login-wrapper {
+      display: flex; align-items: center; gap: 16px;
+      width: 98%; max-width: 1400px;
       position: relative; z-index: 1;
-      background: rgba(253,252,249,.06);
-      border: 1px solid rgba(255,255,255,.12);
+      padding: 0 16px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Side panels — tall rounded white cards ── */
+    .login-side {
+      flex: 1;
+      background: rgba(255,255,255,0.55);
       backdrop-filter: blur(20px);
-      border-radius: 2rem;
-      padding: 3.5rem 3rem;
-      width: 100%; max-width: 420px;
-      text-align: center;
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 2.5rem;
+      padding: 28px;
+      height: 560px;
+      display: flex; flex-direction: column; justify-content: flex-end; gap: 14px;
       animation: fadeUp .8s ease both;
+    }
+    .login-side.left  { animation-delay: .05s; }
+    .login-side.right { animation-delay: .15s; }
+
+    /* right panel has photo at top */
+    .login-side.right { justify-content: flex-start; }
+
+    .login-img {
+      border-radius: 1.8rem; overflow: hidden; position: relative;
+      height: 240px; flex-shrink: 0;
+    }
+    .ls-slide {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0; transition: opacity 1.5s ease, transform 5s ease;
+      transform: scale(1.04);
+    }
+    .ls-slide.active { opacity: 1; transform: scale(1); }
+
+    .side-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.25rem; font-weight: 700; color: var(--charcoal); line-height: 1.3;
+    }
+    .side-body {
+      font-size: .82rem; color: var(--muted); line-height: 1.65; font-weight: 400;
+    }
+    .side-text-wrap { display: flex; flex-direction: column; gap: 10px; }
+
+    /* right panel: text goes below image */
+    .login-side.right .side-text-wrap { margin-top: 14px; }
+
+    /* ── Center column ── */
+    .login-center {
+      width: 400px; flex-shrink: 0;
+      display: flex; flex-direction: column; gap: 12px;
+      animation: fadeUp .8s ease .1s both;
+    }
+
+    .ai-bar {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.9);
+      border-radius: 3rem;
+      padding: 12px 20px;
+      display: flex; align-items: center; gap: 10px;
+      font-size: .85rem; color: var(--charcoal);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+    .ai-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: #34C759; flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(52,199,89,.7); }
+      70%  { box-shadow: 0 0 0 8px rgba(52,199,89,0); }
+      100% { box-shadow: 0 0 0 0 rgba(52,199,89,0); }
+    }
+
+    /* ── Login card — pure white, big rounded ── */
+    .login-card {
+      background: #ffffff;
+      border-radius: 2.5rem;
+      padding: 2.8rem 2.2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.07);
     }
 
     .login-logo {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 2.4rem; font-weight: 300;
-      color: #fff; letter-spacing: .06em;
-      margin-bottom: .3rem;
+      font-size: 2rem; font-weight: 300;
+      color: var(--moss); letter-spacing: .06em; margin-bottom: .2rem; text-align: center;
     }
-    .login-logo span { color: var(--amber-lt); }
+    .login-logo span { color: var(--amber); }
 
     .login-tagline {
-      font-size: .75rem; letter-spacing: .18em; text-transform: uppercase;
-      color: rgba(255,255,255,.45); margin-bottom: 2.8rem;
+      font-size: .68rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1.8rem; opacity: .6; text-align: center;
+      display: block;
     }
 
-    .login-field {
-      display: flex; flex-direction: column; gap: .4rem;
-      text-align: left; margin-bottom: 1rem;
+    /* inputs — big pill style like screenshot */
+    .login-input {
+      width: 100%; padding: 1.1rem 1.3rem;
+      background: #f2f2f7;
+      border: none;
+      border-radius: 1.2rem;
+      color: var(--charcoal); font-family: 'DM Sans', sans-serif; font-size: 1rem;
+      outline: none; margin-bottom: 10px; display: block;
+      transition: background .2s;
     }
-    .login-field label {
-      font-size: .7rem; letter-spacing: .14em; text-transform: uppercase;
-      color: rgba(255,255,255,.5);
-    }
-    .login-field input {
-      padding: .9rem 1.1rem;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.15);
-      border-radius: .8rem;
-      color: #fff; font-family: 'DM Sans', sans-serif; font-size: .95rem;
-      outline: none; transition: border-color .2s, background .2s;
-    }
-    .login-field input::placeholder { color: rgba(255,255,255,.3); }
-    .login-field input:focus {
-      border-color: var(--amber-lt);
-      background: rgba(255,255,255,.12);
-    }
+    .login-input::placeholder { color: #aaa; }
+    .login-input:focus { background: #ebebf0; }
 
     .login-error {
-      font-size: .8rem; color: #ff8a80;
-      min-height: 1.2rem; margin-bottom: .6rem;
-      display: none;
+      font-size: .78rem; color: #c0392b; min-height: 1rem;
+      margin-bottom: .3rem; display: none; text-align: center;
     }
     .login-error.show { display: block; }
 
+    /* Giriş Yap button — solid moss green, full pill */
     .login-btn {
-      width: 100%; padding: .95rem;
-      background: var(--amber); color: #fff;
-      border: none; border-radius: 3rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: .85rem; font-weight: 500;
-      letter-spacing: .1em; text-transform: uppercase;
-      cursor: pointer; margin-top: .5rem;
-      transition: background .25s, transform .2s, box-shadow .25s;
-      box-shadow: 0 4px 20px rgba(200,150,60,.3);
+      width: 100%; padding: 1.1rem;
+      background: var(--moss); color: #fff;
+      border: none; border-radius: 1.5rem;
+      font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 600;
+      cursor: pointer; margin-top: 4px;
+      transition: background .25s, transform .15s;
+      box-shadow: 0 6px 24px rgba(58,82,51,0.28);
     }
-    .login-btn:hover {
-      background: var(--amber-lt);
-      transform: translateY(-1px);
-      box-shadow: 0 8px 28px rgba(200,150,60,.4);
-    }
+    .login-btn:hover { background: #2d4127; transform: translateY(-1px); }
 
-    .login-footer {
-      margin-top: 2rem;
-      font-size: .72rem; color: rgba(255,255,255,.25);
-      letter-spacing: .06em;
+    /* ── Marquee ── */
+    .marquee-wrap {
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.8);
+      border-radius: 3rem;
+      height: 44px; overflow: hidden;
+      display: flex; align-items: center;
+    }
+    .marquee-track {
+      display: flex; gap: 32px;
+      animation: marquee 22s linear infinite;
+      white-space: nowrap; padding-left: 20px;
+    }
+    .mi {
+      font-size: .78rem; color: var(--charcoal); font-weight: 400;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .mi b { color: var(--moss); font-weight: 700; }
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
     /* hide main site until logged in */
     #main-site { display: none; }
 
-    /* fade out overlay */
     #login-overlay.fade-out {
-      opacity: 0;
-      transform: scale(1.02);
+      opacity: 0; transform: scale(1.02);
       transition: opacity .6s ease, transform .6s ease;
       pointer-events: none;
     }
 
-    html { scroll-behavior: smooth; }
+    @media (max-width: 900px) {
+      .login-side { display: none; }
+      .login-center { width: 90%; max-width: 400px; }
+    }
 
+    /* ═══════════════════════════════════
+       MAIN SITE STYLES (unchanged)
+    ═══════════════════════════════════ */
+    html { scroll-behavior: smooth; }
     body {
       font-family: 'DM Sans', sans-serif;
       background: var(--white);
@@ -150,7 +222,6 @@
       overflow-x: hidden;
     }
 
-    /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
@@ -161,14 +232,12 @@
       transition: box-shadow .3s;
     }
     nav.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.06); }
-
     .nav-logo {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.55rem; font-weight: 500; letter-spacing: .04em;
       color: var(--moss); text-decoration: none;
     }
     .nav-logo span { color: var(--amber); }
-
     .nav-links { display: flex; gap: 2.5rem; list-style: none; }
     .nav-links a {
       font-size: .82rem; letter-spacing: .12em; text-transform: uppercase;
@@ -176,7 +245,6 @@
       opacity: .7; transition: opacity .2s, color .2s;
     }
     .nav-links a:hover { opacity: 1; color: var(--moss); }
-
     .nav-cta {
       font-size: .82rem; letter-spacing: .1em; text-transform: uppercase;
       font-weight: 500; padding: .55rem 1.4rem;
@@ -187,7 +255,6 @@
     }
     .nav-cta:hover { background: var(--moss); color: #fff; }
 
-    /* ── HERO ── */
     .hero {
       min-height: 100vh;
       display: grid; grid-template-columns: 1fr 1fr;
@@ -195,15 +262,12 @@
       background: var(--white);
       position: relative; overflow: hidden;
     }
-
     .hero-bg {
       position: absolute; inset: 0; pointer-events: none;
       background:
         radial-gradient(ellipse 60% 70% at 80% 50%, rgba(107,143,94,.08) 0%, transparent 70%),
         radial-gradient(ellipse 40% 50% at 20% 80%, rgba(200,150,60,.06) 0%, transparent 60%);
     }
-
-    /* organic blob shape top-right */
     .hero-blob {
       position: absolute; top: -8%; right: -8%;
       width: 55vw; height: 55vw; max-width: 700px; max-height: 700px;
@@ -211,13 +275,11 @@
       border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
       opacity: .45; pointer-events: none;
     }
-
     .hero-left {
       padding: 4rem 4rem 4rem 6rem;
       position: relative; z-index: 1;
       animation: fadeUp .9s ease both;
     }
-
     .hero-eyebrow {
       font-size: .75rem; letter-spacing: .22em; text-transform: uppercase;
       color: var(--amber); font-weight: 500; margin-bottom: 1.2rem;
@@ -226,24 +288,18 @@
     .hero-eyebrow::before {
       content: ''; display: block; width: 2.5rem; height: 1px; background: var(--amber);
     }
-
     h1 {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(3rem, 5vw, 5.2rem);
       font-weight: 300; line-height: 1.05;
       color: var(--charcoal); margin-bottom: 1.6rem;
     }
-    h1 em {
-      font-style: italic; color: var(--moss);
-    }
-
+    h1 em { font-style: italic; color: var(--moss); }
     .hero-desc {
       font-size: 1rem; line-height: 1.75; color: var(--muted);
       max-width: 38ch; margin-bottom: 2.5rem; font-weight: 300;
     }
-
     .hero-actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-
     .btn-primary {
       padding: .8rem 2.2rem; border-radius: 3rem;
       background: var(--moss); color: #fff;
@@ -253,7 +309,6 @@
       box-shadow: 0 4px 20px rgba(58,82,51,.2);
     }
     .btn-primary:hover { background: #2d4127; transform: translateY(-1px); box-shadow: 0 8px 28px rgba(58,82,51,.28); }
-
     .btn-ghost {
       padding: .8rem 2rem; border-radius: 3rem;
       border: 1.5px solid rgba(58,82,51,.3); color: var(--moss);
@@ -262,18 +317,13 @@
       transition: border-color .25s, color .25s;
     }
     .btn-ghost:hover { border-color: var(--moss); color: var(--moss); }
-
     .hero-right {
       position: relative; z-index: 1; height: 100vh;
       display: flex; align-items: center; justify-content: center;
       padding: 2rem;
       animation: fadeIn 1.2s ease both;
     }
-
-    .hero-products {
-      display: flex; gap: 2.5rem; align-items: flex-end;
-    }
-
+    .hero-products { display: flex; gap: 2.5rem; align-items: flex-end; }
     .product-card-hero {
       background: #ffffff;
       border-radius: 2rem; padding: 2.5rem 2.5rem 2rem;
@@ -285,47 +335,30 @@
     .product-card-hero:hover { transform: translateY(-8px); box-shadow: 0 18px 50px rgba(0,0,0,.12); }
     .product-card-hero.zn { transform: translateY(-24px); }
     .product-card-hero.zn:hover { transform: translateY(-32px); }
-
-    .product-card-hero img {
-      width: 130px; height: 130px; object-fit: contain; margin-bottom: 1rem;
-    }
-
+    .product-card-hero img { width: 130px; height: 130px; object-fit: contain; margin-bottom: 1rem; }
     .product-card-hero .pname {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1rem; font-weight: 600; color: var(--moss);
       letter-spacing: .05em; margin-bottom: .3rem;
     }
-    .product-card-hero .ptag {
-      font-size: .72rem; color: var(--muted); letter-spacing: .08em; text-transform: uppercase;
-    }
+    .product-card-hero .ptag { font-size: .72rem; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
     .product-card-hero .pbadge {
       display: inline-block; margin-top: .8rem;
       font-size: .68rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
       padding: .3rem .9rem; border-radius: 3rem;
       background: rgba(107,143,94,.12); color: var(--sage);
     }
-    .product-card-hero.zn .pbadge {
-      background: rgba(200,150,60,.12); color: var(--amber);
-    }
+    .product-card-hero.zn .pbadge { background: rgba(200,150,60,.12); color: var(--amber); }
 
-    /* ── SECTION SHARED ── */
     section { position: relative; }
-
     .section-label {
       font-size: .72rem; letter-spacing: .22em; text-transform: uppercase;
       color: var(--amber); font-weight: 500; margin-bottom: .9rem;
       display: flex; align-items: center; gap: .6rem;
     }
-    .section-label::before {
-      content: ''; display: block; width: 2rem; height: 1px; background: var(--amber);
-    }
+    .section-label::before { content: ''; display: block; width: 2rem; height: 1px; background: var(--amber); }
+    h2 { font-family: 'Cormorant Garamond', serif; font-weight: 300; line-height: 1.1; }
 
-    h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300; line-height: 1.1;
-    }
-
-    /* ── STATS STRIP ── */
     .stats-strip {
       background: var(--moss);
       padding: 3rem 6rem;
@@ -334,26 +367,17 @@
     }
     .stat-item .stat-num {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 3rem; font-weight: 300; color: var(--amber-lt);
-      line-height: 1;
+      font-size: 3rem; font-weight: 300; color: var(--amber-lt); line-height: 1;
     }
-    .stat-item .stat-label {
-      font-size: .8rem; color: rgba(255,255,255,.65);
-      margin-top: .5rem; line-height: 1.5; font-weight: 300;
-    }
+    .stat-item .stat-label { font-size: .8rem; color: rgba(255,255,255,.65); margin-top: .5rem; line-height: 1.5; font-weight: 300; }
 
-    /* ── MECHANISM ── */
-    .mechanism {
-      padding: 7rem 6rem;
-      background: var(--white);
-    }
+    .mechanism { padding: 7rem 6rem; background: var(--white); }
     .mechanism-inner {
       max-width: 1100px; margin: 0 auto;
       display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
     }
     .mechanism h2 { font-size: clamp(2.2rem, 3.5vw, 3.5rem); color: var(--charcoal); margin-bottom: 1.5rem; }
     .mechanism p { color: var(--muted); font-size: .95rem; line-height: 1.8; font-weight: 300; margin-bottom: 2rem; }
-
     .mech-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
     .mech-list li {
       display: flex; align-items: flex-start; gap: 1rem;
@@ -369,20 +393,11 @@
     .mech-text strong { display: block; font-size: .85rem; font-weight: 500; color: var(--charcoal); margin-bottom: .15rem; }
     .mech-text span { font-size: .8rem; color: var(--muted); }
 
-    /* ── PRODUCTS ── */
-    .products {
-      padding: 7rem 6rem;
-      background: var(--cream);
-    }
+    .products { padding: 7rem 6rem; background: var(--cream); }
     .products-header { text-align: center; max-width: 600px; margin: 0 auto 4.5rem; }
     .products-header h2 { font-size: clamp(2rem, 3vw, 3.2rem); margin-bottom: 1rem; color: var(--charcoal); }
     .products-header p { color: var(--muted); font-size: .95rem; line-height: 1.75; font-weight: 300; }
-
-    .products-grid {
-      max-width: 1000px; margin: 0 auto;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
-    }
-
+    .products-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
     .prod-card {
       background: var(--white); border-radius: 2rem;
       padding: 3rem 2.5rem;
@@ -390,56 +405,31 @@
       transition: box-shadow .3s, transform .3s;
     }
     .prod-card:hover { box-shadow: 0 12px 50px rgba(0,0,0,.1); transform: translateY(-4px); }
-
-    .prod-card-header {
-      display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;
-    }
+    .prod-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
     .prod-tag {
       font-size: .7rem; letter-spacing: .15em; text-transform: uppercase;
       font-weight: 500; padding: .3rem 1rem; border-radius: 3rem;
     }
     .prod-tag.green { background: rgba(107,143,94,.12); color: var(--sage); }
     .prod-tag.amber { background: rgba(200,150,60,.12); color: var(--amber); }
-
     .prod-card h3 {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.9rem; font-weight: 400; color: var(--charcoal);
       margin-bottom: .4rem; line-height: 1.1;
     }
     .prod-subtitle { font-size: .8rem; color: var(--muted); margin-bottom: 2rem; }
-
-    .prod-use {
-      display: flex; align-items: center; gap: .5rem;
-      font-size: .8rem; font-weight: 500; color: var(--moss);
-      margin-bottom: 1.5rem;
-    }
+    .prod-use { display: flex; align-items: center; gap: .5rem; font-size: .8rem; font-weight: 500; color: var(--moss); margin-bottom: 1.5rem; }
     .prod-use::before { content: '◆'; font-size: .5rem; }
-
-    .ingredient-list {
-      font-size: .78rem; color: var(--muted); line-height: 1.8;
-      border-top: 1px solid rgba(0,0,0,.07); padding-top: 1.5rem;
-    }
+    .ingredient-list { font-size: .78rem; color: var(--muted); line-height: 1.8; border-top: 1px solid rgba(0,0,0,.07); padding-top: 1.5rem; }
     .ingredient-list strong { color: var(--charcoal); font-weight: 500; }
-
-    .prod-instruction {
-      margin-top: 1.5rem; padding: 1rem 1.2rem;
-      background: var(--cream); border-radius: 1rem;
-      font-size: .78rem; color: var(--muted); line-height: 1.7;
-    }
+    .prod-instruction { margin-top: 1.5rem; padding: 1rem 1.2rem; background: var(--cream); border-radius: 1rem; font-size: .78rem; color: var(--muted); line-height: 1.7; }
     .prod-instruction strong { color: var(--moss); display: block; margin-bottom: .3rem; }
 
-    /* ── INDICATIONS ── */
-    .indications {
-      padding: 7rem 6rem;
-      background: var(--white);
-    }
+    .indications { padding: 7rem 6rem; background: var(--white); }
     .indications-inner { max-width: 1100px; margin: 0 auto; }
     .indications-header { margin-bottom: 3.5rem; }
     .indications-header h2 { font-size: clamp(2rem, 3vw, 3.2rem); color: var(--charcoal); }
-
-    .ind-grid {
-      display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2rem;
-    }
+    .ind-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.2rem; }
     .ind-item {
       background: var(--cream); border-radius: 1.5rem;
       padding: 2rem 1.5rem; text-align: center;
@@ -449,92 +439,46 @@
     .ind-icon { font-size: 2rem; margin-bottom: .8rem; }
     .ind-name { font-size: .85rem; font-weight: 500; color: var(--charcoal); line-height: 1.4; }
 
-    /* ── CASE STUDIES ── */
-    .cases {
-      padding: 7rem 6rem;
-      background: var(--moss);
-    }
+    .cases { padding: 7rem 6rem; background: var(--moss); }
     .cases-header { text-align: center; max-width: 600px; margin: 0 auto 4rem; }
-    .cases-header .section-label::before { background: var(--amber-lt); }
     .cases-header .section-label { color: var(--amber-lt); justify-content: center; }
     .cases-header .section-label::before { display: none; }
     .cases-header h2 { font-size: clamp(2rem, 3vw, 3.2rem); color: #fff; margin-bottom: 1rem; }
     .cases-header p { color: rgba(255,255,255,.6); font-size: .95rem; line-height: 1.75; font-weight: 300; }
-
-    .cases-grid {
-      max-width: 1000px; margin: 0 auto;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
-    }
+    .cases-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
     .case-card {
       background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
       border-radius: 2rem; padding: 2.5rem;
       transition: background .25s;
     }
     .case-card:hover { background: rgba(255,255,255,.1); }
+    .case-journal { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--amber-lt); font-weight: 500; margin-bottom: 1rem; }
+    .case-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; color: #fff; margin-bottom: 1rem; line-height: 1.35; }
+    .case-result { font-size: .85rem; color: rgba(255,255,255,.65); line-height: 1.7; font-weight: 300; }
+    .case-meta { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .case-pill { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; padding: .3rem .9rem; border-radius: 3rem; border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.6); }
 
-    .case-journal {
-      font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
-      color: var(--amber-lt); font-weight: 500; margin-bottom: 1rem;
-    }
-    .case-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.3rem; font-weight: 400; color: #fff; margin-bottom: 1rem; line-height: 1.35;
-    }
-    .case-result {
-      font-size: .85rem; color: rgba(255,255,255,.65); line-height: 1.7; font-weight: 300;
-    }
-    .case-meta {
-      display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;
-    }
-    .case-pill {
-      font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
-      padding: .3rem .9rem; border-radius: 3rem;
-      border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.6);
-    }
-
-    /* ── INGREDIENTS DEEP ── */
-    .ingredients-section {
-      padding: 7rem 6rem;
-      background: var(--cream);
-    }
+    .ingredients-section { padding: 7rem 6rem; background: var(--cream); }
     .ing-inner { max-width: 1100px; margin: 0 auto; }
     .ing-header { text-align: center; max-width: 550px; margin: 0 auto 4rem; }
     .ing-header h2 { font-size: clamp(2rem, 3vw, 3.2rem); color: var(--charcoal); margin-bottom: 1rem; }
     .ing-header p { color: var(--muted); font-size: .95rem; line-height: 1.75; font-weight: 300; }
-
-    .ing-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem;
-    }
-    .ing-card {
-      background: var(--white); border-radius: 1.5rem; padding: 1.8rem 1.5rem;
-      transition: transform .25s, box-shadow .25s;
-    }
+    .ing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+    .ing-card { background: var(--white); border-radius: 1.5rem; padding: 1.8rem 1.5rem; transition: transform .25s, box-shadow .25s; }
     .ing-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,.08); }
     .ing-latin { font-size: .75rem; color: var(--sage); letter-spacing: .06em; font-style: italic; margin-bottom: .35rem; }
     .ing-common { font-weight: 500; font-size: .9rem; color: var(--charcoal); margin-bottom: .5rem; }
     .ing-desc { font-size: .78rem; color: var(--muted); line-height: 1.65; font-weight: 300; }
 
-    /* ── CONTACT ── */
-    .contact {
-      padding: 7rem 6rem;
-      background: var(--white);
-    }
-    .contact-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
-    }
+    .contact { padding: 7rem 6rem; background: var(--white); }
+    .contact-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
     .contact h2 { font-size: clamp(2rem, 3vw, 3.2rem); color: var(--charcoal); margin-bottom: 1rem; }
     .contact p { color: var(--muted); font-size: .95rem; line-height: 1.8; font-weight: 300; margin-bottom: 2.5rem; }
-
     .contact-items { display: flex; flex-direction: column; gap: 1.5rem; }
-    .contact-item {
-      display: flex; gap: 1rem; align-items: flex-start;
-      padding: 1.2rem; background: var(--cream); border-radius: 1rem;
-    }
+    .contact-item { display: flex; gap: 1rem; align-items: flex-start; padding: 1.2rem; background: var(--cream); border-radius: 1rem; }
     .contact-icon { font-size: 1.4rem; flex-shrink: 0; }
     .contact-label { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: .2rem; }
     .contact-value { font-size: .95rem; color: var(--charcoal); font-weight: 500; }
-
     .contact-form { display: flex; flex-direction: column; gap: 1rem; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .form-group { display: flex; flex-direction: column; gap: .4rem; }
@@ -545,49 +489,31 @@
       font-family: 'DM Sans', sans-serif; font-size: .9rem; color: var(--charcoal);
       outline: none; transition: border-color .2s;
     }
-    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-      border-color: var(--sage);
-    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--sage); }
     .form-group textarea { resize: vertical; min-height: 110px; }
 
-    /* ── FOOTER ── */
     footer {
       background: var(--charcoal);
       padding: 3rem 6rem;
       display: flex; align-items: center; justify-content: space-between;
       flex-wrap: wrap; gap: 1.5rem;
     }
-    .footer-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.3rem; color: #fff; font-weight: 400;
-    }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: #fff; font-weight: 400; }
     .footer-logo span { color: var(--amber-lt); }
     .footer-copy { font-size: .78rem; color: rgba(255,255,255,.4); }
     .footer-links { display: flex; gap: 1.5rem; }
     .footer-links a { font-size: .78rem; color: rgba(255,255,255,.5); text-decoration: none; transition: color .2s; }
     .footer-links a:hover { color: #fff; }
 
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    .reveal {
-      opacity: 0; transform: translateY(28px);
-      transition: opacity .7s ease, transform .7s ease;
-    }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     .reveal-d1 { transition-delay: .1s; }
     .reveal-d2 { transition-delay: .2s; }
     .reveal-d3 { transition-delay: .3s; }
     .reveal-d4 { transition-delay: .4s; }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       nav { padding: 1rem 1.5rem; }
       .nav-links { display: none; }
@@ -613,32 +539,75 @@
 </head>
 <body>
 
-<!-- LOGIN OVERLAY -->
+<!-- ══ LOGIN OVERLAY ══ -->
 <div id="login-overlay">
-  <div class="login-bg"></div>
-  <div class="lb1"></div>
-  <div class="lb2"></div>
-  <div class="login-card">
-    <div class="login-logo">Ever<span>green</span></div>
-    <div class="login-tagline">Phytocenter · Klinik Erişim</div>
-    <div class="login-field">
-      <label>Kullanıcı Adı</label>
-      <input type="text" id="login-user" placeholder="kullanıcı adı" autocomplete="username" />
+  <div class="login-orb login-orb1"></div>
+  <div class="login-orb login-orb2"></div>
+
+  <div class="login-wrapper">
+
+    <!-- Sol Panel: sadece metin, altta -->
+    <div class="login-side left">
+      <div class="side-text-wrap">
+        <div class="side-title">Rejeneratif Hücre Gücü</div>
+        <div class="side-body">Kök hücre aktivatörleri doku kaybını minimize ederek fibroblast proliferasyonunu ve kollajen sentezini hızlandırır.</div>
+      </div>
     </div>
-    <div class="login-field">
-      <label>Şifre</label>
-      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" />
+
+    <!-- Orta: Login -->
+    <div class="login-center">
+      <div class="ai-bar">
+        <div class="ai-dot"></div>
+        <span><b>Bio-AI:</b> Sistem analiz için giriş bekliyor.</span>
+      </div>
+
+      <div class="login-card">
+        <div class="login-logo">Ever<span>green</span></div>
+        <span class="login-tagline">Phytocenter · Klinik Erişim</span>
+        <input class="login-input" type="text" id="login-user" placeholder="Kullanıcı Adı" autocomplete="username" />
+        <input class="login-input" type="password" id="login-pass" placeholder="Şifre" autocomplete="current-password" />
+        <div class="login-error" id="login-error">Kullanıcı adı veya şifre hatalı.</div>
+        <button class="login-btn" id="login-btn">Giriş Yap</button>
+      </div>
+
+      <div class="marquee-wrap">
+        <div class="marquee-track">
+          <span class="mi">🍃 <b>Evergreen</b> Cream</span>
+          <span class="mi">💧 <b>Evergreen</b> ZN</span>
+          <span class="mi">🔥 <b>Evergreen</b> Yanık Bakım</span>
+          <span class="mi">🦶 <b>Evergreen</b> Diyabetik Ayak</span>
+          <span class="mi">🛏️ <b>Evergreen</b> Bası Yarası</span>
+          <span class="mi">🧪 <b>Evergreen</b> Peer-Reviewed</span>
+          <span class="mi">🍃 <b>Evergreen</b> Cream</span>
+          <span class="mi">💧 <b>Evergreen</b> ZN</span>
+          <span class="mi">🔥 <b>Evergreen</b> Yanık Bakım</span>
+          <span class="mi">🦶 <b>Evergreen</b> Diyabetik Ayak</span>
+          <span class="mi">🛏️ <b>Evergreen</b> Bası Yarası</span>
+          <span class="mi">🧪 <b>Evergreen</b> Peer-Reviewed</span>
+        </div>
+      </div>
     </div>
-    <div class="login-error" id="login-error">Kullanıcı adı veya şifre hatalı.</div>
-    <button class="login-btn" id="login-btn">Giriş Yap →</button>
-    <div class="login-footer">evergreen.life · Yetkisiz erişim yasaktır</div>
+
+    <!-- Sağ Panel: üstte fotoğraf, altta metin -->
+    <div class="login-side right">
+      <div class="login-img" id="ls-right">
+        <div class="ls-slide active" style="background-image:url('https://images.unsplash.com/photo-1559839734-2b71f1e59816?w=600')"></div>
+        <div class="ls-slide" style="background-image:url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600')"></div>
+      </div>
+      <div class="side-text-wrap">
+        <div class="side-title">Klinik Uzman Görüşü</div>
+        <div class="side-body">Peer-reviewed vaka yayınlarıyla desteklenen Evergreen protokolleri, ağır yanıklarda bile estetik bütünlüğü hızla geri kazandırır.</div>
+      </div>
+    </div>
+
   </div>
 </div>
+<!-- /LOGIN OVERLAY -->
 
-<!-- MAIN SITE -->
+
+<!-- ══ MAIN SITE ══ -->
 <div id="main-site">
 
-<!-- NAV -->
 <nav id="nav">
   <a href="#" class="nav-logo">Ever<span>green</span></a>
   <ul class="nav-links">
@@ -650,23 +619,18 @@
   <a href="#iletisim" class="nav-cta">İletişim</a>
 </nav>
 
-<!-- HERO -->
 <section class="hero" id="hero">
   <div class="hero-bg"></div>
   <div class="hero-blob"></div>
-
   <div class="hero-left">
     <div class="hero-eyebrow">Phytocenter Bilimsel Yara Bakımı</div>
     <h1>Kronik yara ve yanık tedavisinde <em>fark yaratan</em> destek</h1>
-    <p class="hero-desc">
-      Doğanın iyileştirici gücünü bilimle buluşturan Evergreen kremleri; kök hücre aktivasyonundan anjiogeneze kadar her aşamada yaranızın yanında.
-    </p>
+    <p class="hero-desc">Doğanın iyileştirici gücünü bilimle buluşturan Evergreen kremleri; kök hücre aktivasyonundan anjiogeneze kadar her aşamada yaranızın yanında.</p>
     <div class="hero-actions">
       <a href="#urunler" class="btn-primary">Ürünleri İncele</a>
       <a href="#klinik" class="btn-ghost">Klinik Kanıt</a>
     </div>
   </div>
-
   <div class="hero-right">
     <div class="hero-products">
       <div class="product-card-hero">
@@ -685,94 +649,39 @@
   </div>
 </section>
 
-<!-- STATS STRIP -->
 <div class="stats-strip reveal">
-  <div class="stat-item">
-    <div class="stat-num">6</div>
-    <div class="stat-label">Farklı Yara İyileşme Mekanizması</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num">11</div>
-    <div class="stat-label">Seçkin Doğal Aktif İçerik</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num">24h</div>
-    <div class="stat-label">Günde Tek Uygulama Yeterli</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num">Peer‑Reviewed</div>
-    <div class="stat-label">Klinik Vaka Yayınları</div>
-  </div>
+  <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">Farklı Yara İyileşme Mekanizması</div></div>
+  <div class="stat-item"><div class="stat-num">11</div><div class="stat-label">Seçkin Doğal Aktif İçerik</div></div>
+  <div class="stat-item"><div class="stat-num">24h</div><div class="stat-label">Günde Tek Uygulama Yeterli</div></div>
+  <div class="stat-item"><div class="stat-num">Peer‑Reviewed</div><div class="stat-label">Klinik Vaka Yayınları</div></div>
 </div>
 
-<!-- MECHANISM -->
 <section class="mechanism" id="mekanizma">
   <div class="mechanism-inner">
     <div class="reveal">
       <div class="section-label">Bilimsel Temel</div>
       <h2>Etki <em style="font-style:italic;color:var(--moss)">Mekanizması</em></h2>
-      <p>
-        Evergreen kremleri, yara iyileşmesinin dört kritik aşamasını — inflamasyon, proliferasyon, onarım ve yeniden şekillenme — doğadan ilham alan aktif bileşenleriyle destekler.
-      </p>
+      <p>Evergreen kremleri, yara iyileşmesinin dört kritik aşamasını — inflamasyon, proliferasyon, onarım ve yeniden şekillenme — doğadan ilham alan aktif bileşenleriyle destekler.</p>
       <a href="#urunler" class="btn-primary" style="display:inline-flex;">Ürünleri Keşfet</a>
     </div>
     <ul class="mech-list reveal reveal-d2">
-      <li>
-        <div class="mech-num">01</div>
-        <div class="mech-text">
-          <strong>Kök Hücre Aktivasyonu</strong>
-          <span>Yaş sınırı olmaksızın stem cell proliferasyon ve migrasyonunu tetikler</span>
-        </div>
-      </li>
-      <li>
-        <div class="mech-num">02</div>
-        <div class="mech-text">
-          <strong>Fibroblast Aktivasyonu</strong>
-          <span>Kolajen ve elastin sentezini hızlandırır</span>
-        </div>
-      </li>
-      <li>
-        <div class="mech-num">03</div>
-        <div class="mech-text">
-          <strong>Ekstrasellüler Matris Oluşumu</strong>
-          <span>Granülasyon dokusu formasyonunu destekler</span>
-        </div>
-      </li>
-      <li>
-        <div class="mech-num">04</div>
-        <div class="mech-text">
-          <strong>Anjiogenez</strong>
-          <span>VEGF üretimini artırarak yeni damar oluşumunu sağlar</span>
-        </div>
-      </li>
-      <li>
-        <div class="mech-num">05</div>
-        <div class="mech-text">
-          <strong>Re-Epitelizasyon</strong>
-          <span>Keratinosit migrasyonu ile yeni cilt dokusunun yeniden oluşması</span>
-        </div>
-      </li>
-      <li>
-        <div class="mech-num">06</div>
-        <div class="mech-text">
-          <strong>Antimikrobiyal Etkinlik</strong>
-          <span>Biyofilm oluşumunu engeller, bakteri yükünü azaltır</span>
-        </div>
-      </li>
+      <li><div class="mech-num">01</div><div class="mech-text"><strong>Kök Hücre Aktivasyonu</strong><span>Yaş sınırı olmaksızın stem cell proliferasyon ve migrasyonunu tetikler</span></div></li>
+      <li><div class="mech-num">02</div><div class="mech-text"><strong>Fibroblast Aktivasyonu</strong><span>Kolajen ve elastin sentezini hızlandırır</span></div></li>
+      <li><div class="mech-num">03</div><div class="mech-text"><strong>Ekstrasellüler Matris Oluşumu</strong><span>Granülasyon dokusu formasyonunu destekler</span></div></li>
+      <li><div class="mech-num">04</div><div class="mech-text"><strong>Anjiogenez</strong><span>VEGF üretimini artırarak yeni damar oluşumunu sağlar</span></div></li>
+      <li><div class="mech-num">05</div><div class="mech-text"><strong>Re-Epitelizasyon</strong><span>Keratinosit migrasyonu ile yeni cilt dokusunun yeniden oluşması</span></div></li>
+      <li><div class="mech-num">06</div><div class="mech-text"><strong>Antimikrobiyal Etkinlik</strong><span>Biyofilm oluşumunu engeller, bakteri yükünü azaltır</span></div></li>
     </ul>
   </div>
 </section>
 
-<!-- PRODUCTS -->
 <section class="products" id="urunler">
   <div class="products-header reveal">
     <div class="section-label" style="justify-content:center;">Ürün Ailesi</div>
     <h2 style="font-size:clamp(2rem,3vw,3.2rem);color:var(--charcoal);margin-bottom:1rem;">İki ürün, <em style="font-style:italic;color:var(--moss)">tek hedef</em></h2>
     <p>Yaranın derinliğine ve tipine göre doğru kremle optimize iyileşme sağlayın.</p>
   </div>
-
   <div class="products-grid">
-    <!-- Evergreen Cream -->
     <div class="prod-card reveal reveal-d1">
       <div class="prod-card-header">
         <span class="prod-tag green">Derin Yaralar</span>
@@ -781,16 +690,9 @@
       <h3>Evergreen<br/>Cream</h3>
       <div class="prod-subtitle">Skin Care Cream · 100 ml</div>
       <div class="prod-use">Kullanım: Derin yaralarda</div>
-      <div class="ingredient-list">
-        <strong>İçeriği:</strong> Water, Olea Europaea Fruit Oil, Beeswax, Laurus Nobilis Fruit Oil, Sodium Borate, Ascorbic Acid, Myrtus Communis Leaf Oil, Hypericum Perforatum Oil, Pistacia Lentiscus Gum, Benzoic Acid and Its Sodium Salt, Nigella Sativa Seed Oil, Tocopherol.
-      </div>
-      <div class="prod-instruction">
-        <strong>Uygulama</strong>
-        Debride edilmiş ve serum fizyolojik/antiseptik ile yıkanmış yaraya ince tabaka krem sürün, steril gazlı bez ile kapatın. <strong>Günde bir kere.</strong>
-      </div>
+      <div class="ingredient-list"><strong>İçeriği:</strong> Water, Olea Europaea Fruit Oil, Beeswax, Laurus Nobilis Fruit Oil, Sodium Borate, Ascorbic Acid, Myrtus Communis Leaf Oil, Hypericum Perforatum Oil, Pistacia Lentiscus Gum, Benzoic Acid and Its Sodium Salt, Nigella Sativa Seed Oil, Tocopherol.</div>
+      <div class="prod-instruction"><strong>Uygulama</strong>Debride edilmiş ve serum fizyolojik/antiseptik ile yıkanmış yaraya ince tabaka krem sürün, steril gazlı bez ile kapatın. <strong>Günde bir kere.</strong></div>
     </div>
-
-    <!-- Evergreen ZN Cream -->
     <div class="prod-card reveal reveal-d2">
       <div class="prod-card-header">
         <span class="prod-tag amber">Yanık & Yüzeyel</span>
@@ -799,18 +701,12 @@
       <h3>Evergreen<br/>ZN Cream</h3>
       <div class="prod-subtitle">Skin Care Cream · 100 ml</div>
       <div class="prod-use" style="color:var(--amber);">Kullanım: Yanıklarda ve yüzeyel yaralarda</div>
-      <div class="ingredient-list">
-        <strong>İçeriği:</strong> Water, Olea Europaea Fruit Oil, Beeswax, Hypericum Perforatum Oil, Laurus Nobilis Fruit Oil, <strong style="color:var(--amber);">Zinc Oxide</strong>, Sodium Borate, Ascorbic Acid, Tocopherol, Benzoic Acid and Its Sodium Salt, Myrtus Communis Leaf Oil, Pistacia Lentiscus Gum, Nigella Sativa Seed Oil.
-      </div>
-      <div class="prod-instruction">
-        <strong>Uygulama</strong>
-        Debride edilmiş ve serum fizyolojik/antiseptik ile yıkanmış yaraya ince tabaka krem sürün, steril gazlı bez ile kapatın. <strong>Günde bir kere.</strong>
-      </div>
+      <div class="ingredient-list"><strong>İçeriği:</strong> Water, Olea Europaea Fruit Oil, Beeswax, Hypericum Perforatum Oil, Laurus Nobilis Fruit Oil, <strong style="color:var(--amber);">Zinc Oxide</strong>, Sodium Borate, Ascorbic Acid, Tocopherol, Benzoic Acid and Its Sodium Salt, Myrtus Communis Leaf Oil, Pistacia Lentiscus Gum, Nigella Sativa Seed Oil.</div>
+      <div class="prod-instruction"><strong>Uygulama</strong>Debride edilmiş ve serum fizyolojik/antiseptik ile yıkanmış yaraya ince tabaka krem sürün, steril gazlı bez ile kapatın. <strong>Günde bir kere.</strong></div>
     </div>
   </div>
 </section>
 
-<!-- INDICATIONS -->
 <section class="indications">
   <div class="indications-inner">
     <div class="indications-header reveal">
@@ -818,31 +714,15 @@
       <h2 style="font-size:clamp(2rem,3vw,3.2rem);">Hangi <em style="font-style:italic;color:var(--moss)">yaralarda</em> kullanılır?</h2>
     </div>
     <div class="ind-grid">
-      <div class="ind-item reveal reveal-d1">
-        <div class="ind-icon">🛏️</div>
-        <div class="ind-name">Yatak / Bası Yaraları</div>
-      </div>
-      <div class="ind-item reveal reveal-d2">
-        <div class="ind-icon">🦶</div>
-        <div class="ind-name">Diyabetik Ayak Yaraları</div>
-      </div>
-      <div class="ind-item reveal reveal-d3">
-        <div class="ind-icon">🩸</div>
-        <div class="ind-name">Venöz Ülser Yaraları</div>
-      </div>
-      <div class="ind-item reveal reveal-d4">
-        <div class="ind-icon">💧</div>
-        <div class="ind-name">Arteriyel Ülser Yaraları</div>
-      </div>
-      <div class="ind-item reveal reveal-d1">
-        <div class="ind-icon">🔥</div>
-        <div class="ind-name">Yanıklar</div>
-      </div>
+      <div class="ind-item reveal reveal-d1"><div class="ind-icon">🛏️</div><div class="ind-name">Yatak / Bası Yaraları</div></div>
+      <div class="ind-item reveal reveal-d2"><div class="ind-icon">🦶</div><div class="ind-name">Diyabetik Ayak Yaraları</div></div>
+      <div class="ind-item reveal reveal-d3"><div class="ind-icon">🩸</div><div class="ind-name">Venöz Ülser Yaraları</div></div>
+      <div class="ind-item reveal reveal-d4"><div class="ind-icon">💧</div><div class="ind-name">Arteriyel Ülser Yaraları</div></div>
+      <div class="ind-item reveal reveal-d1"><div class="ind-icon">🔥</div><div class="ind-name">Yanıklar</div></div>
     </div>
   </div>
 </section>
 
-<!-- CLINICAL CASES -->
 <section class="cases" id="klinik">
   <div class="cases-header reveal">
     <div class="section-label">Klinik Kanıt</div>
@@ -853,31 +733,18 @@
     <div class="case-card reveal reveal-d1">
       <div class="case-journal">Clinics in Surgery · 2023</div>
       <div class="case-title">Kategori IV Sakral Basınç Ülserinin Özel Yara Bakım Kremi ile İyileştirilmesi</div>
-      <div class="case-result">
-        COVID-19 sonrası yoğun bakımda yatan, Tip II diyabetli 74 yaşındaki erkek hasta. 16×11,5×4,8 cm boyutlarındaki yara, 24 haftalık günlük krem uygulaması sonucunda tam epitelizasyonla kapandı. Cilt grefti gerekmedi.
-      </div>
-      <div class="case-meta">
-        <span class="case-pill">Evergreen Cream</span>
-        <span class="case-pill">24 Hafta</span>
-        <span class="case-pill">%100 Kapanma</span>
-      </div>
+      <div class="case-result">COVID-19 sonrası yoğun bakımda yatan, Tip II diyabetli 74 yaşındaki erkek hasta. 16×11,5×4,8 cm boyutlarındaki yara, 24 haftalık günlük krem uygulaması sonucunda tam epitelizasyonla kapandı. Cilt grefti gerekmedi.</div>
+      <div class="case-meta"><span class="case-pill">Evergreen Cream</span><span class="case-pill">24 Hafta</span><span class="case-pill">%100 Kapanma</span></div>
     </div>
     <div class="case-card reveal reveal-d2">
       <div class="case-journal">Clinics in Surgery · 2024</div>
       <div class="case-title">Barut Patlaması Sonucu Gelişen Yanık Yarasının Tedavisi</div>
-      <div class="case-result">
-        Yüz ve boyun bölgesinde 2.–3. derece, %14 VÜYA yanık yaralanan 36 yaşındaki erkek hasta. İki seans debridman ardından günlük ZN Cream uygulamasıyla 10. günde tam iyileşme. Yüzde görünür skar kalmadı.
-      </div>
-      <div class="case-meta">
-        <span class="case-pill">Evergreen ZN Cream</span>
-        <span class="case-pill">10 Gün</span>
-        <span class="case-pill">Skar Yok</span>
-      </div>
+      <div class="case-result">Yüz ve boyun bölgesinde 2.–3. derece, %14 VÜYA yanık yaralanan 36 yaşındaki erkek hasta. İki seans debridman ardından günlük ZN Cream uygulamasıyla 10. günde tam iyileşme. Yüzde görünür skar kalmadı.</div>
+      <div class="case-meta"><span class="case-pill">Evergreen ZN Cream</span><span class="case-pill">10 Gün</span><span class="case-pill">Skar Yok</span></div>
     </div>
   </div>
 </section>
 
-<!-- INGREDIENTS -->
 <section class="ingredients-section" id="icerik">
   <div class="ing-inner">
     <div class="ing-header reveal">
@@ -886,108 +753,41 @@
       <p>Her bileşen, yara iyileşmesinin spesifik bir basamağını desteklemek üzere formüle edilmiştir.</p>
     </div>
     <div class="ing-grid">
-      <div class="ing-card reveal reveal-d1">
-        <div class="ing-latin">Olea europaea</div>
-        <div class="ing-common">Zeytin Yağı</div>
-        <div class="ing-desc">Antioksidan ve nemlendiricii. Cilt bariyer onarımını destekler, tokoferol içeriğiyle hücre koruma sağlar.</div>
-      </div>
-      <div class="ing-card reveal reveal-d2">
-        <div class="ing-latin">Laurus nobilis</div>
-        <div class="ing-common">Defne Yağı</div>
-        <div class="ing-desc">Antimikrobiyal ve anti-inflamatuvar özellikleriyle yara enfeksiyonunu kontrol eder.</div>
-      </div>
-      <div class="ing-card reveal reveal-d3">
-        <div class="ing-latin">Hypericum perforatum</div>
-        <div class="ing-common">Sarı Kantaron Yağı</div>
-        <div class="ing-desc">Doku yenilenmesini hızlandıran hypericin içeriğiyle yara kapanmasını destekler.</div>
-      </div>
-      <div class="ing-card reveal reveal-d1">
-        <div class="ing-latin">Myrtus communis</div>
-        <div class="ing-common">Mersin Yaprağı Yağı</div>
-        <div class="ing-desc">Güçlü antibakteriyel etki. Biyofilm oluşumunu önleyerek kronik yara enfeksiyonunu engeller.</div>
-      </div>
-      <div class="ing-card reveal reveal-d2">
-        <div class="ing-latin">Nigella sativa</div>
-        <div class="ing-common">Çörekotu Tohum Yağı</div>
-        <div class="ing-desc">Timoquinon içeriğiyle immün modulasyon ve güçlü antioksidan etki gösterir.</div>
-      </div>
-      <div class="ing-card reveal reveal-d3">
-        <div class="ing-latin">Zinc Oxide <span style="color:var(--amber);font-style:normal;">(ZN formülde)</span></div>
-        <div class="ing-common">Çinko Oksit</div>
-        <div class="ing-desc">Yanık yaralarında epitelizasyonu hızlandırır. Antimikrobiyal bariyer oluşturur. Sadece ZN formülünde.</div>
-      </div>
+      <div class="ing-card reveal reveal-d1"><div class="ing-latin">Olea europaea</div><div class="ing-common">Zeytin Yağı</div><div class="ing-desc">Antioksidan ve nemlendirici. Cilt bariyer onarımını destekler, tokoferol içeriğiyle hücre koruma sağlar.</div></div>
+      <div class="ing-card reveal reveal-d2"><div class="ing-latin">Laurus nobilis</div><div class="ing-common">Defne Yağı</div><div class="ing-desc">Antimikrobiyal ve anti-inflamatuvar özellikleriyle yara enfeksiyonunu kontrol eder.</div></div>
+      <div class="ing-card reveal reveal-d3"><div class="ing-latin">Hypericum perforatum</div><div class="ing-common">Sarı Kantaron Yağı</div><div class="ing-desc">Doku yenilenmesini hızlandıran hypericin içeriğiyle yara kapanmasını destekler.</div></div>
+      <div class="ing-card reveal reveal-d1"><div class="ing-latin">Myrtus communis</div><div class="ing-common">Mersin Yaprağı Yağı</div><div class="ing-desc">Güçlü antibakteriyel etki. Biyofilm oluşumunu önleyerek kronik yara enfeksiyonunu engeller.</div></div>
+      <div class="ing-card reveal reveal-d2"><div class="ing-latin">Nigella sativa</div><div class="ing-common">Çörekotu Tohum Yağı</div><div class="ing-desc">Timoquinon içeriğiyle immün modulasyon ve güçlü antioksidan etki gösterir.</div></div>
+      <div class="ing-card reveal reveal-d3"><div class="ing-latin">Zinc Oxide <span style="color:var(--amber);font-style:normal;">(ZN formülde)</span></div><div class="ing-common">Çinko Oksit</div><div class="ing-desc">Yanık yaralarında epitelizasyonu hızlandırır. Antimikrobiyal bariyer oluşturur. Sadece ZN formülünde.</div></div>
     </div>
   </div>
 </section>
 
-<!-- CONTACT -->
 <section class="contact" id="iletisim">
   <div class="contact-inner">
     <div class="reveal">
       <div class="section-label">İletişim</div>
       <h2 style="font-size:clamp(2rem,3vw,3.2rem);">Bizimle <em style="font-style:italic;color:var(--moss)">iletişime</em> geçin</h2>
-      <p>
-        Ürünlerimiz hakkında bilgi almak, sipariş vermek veya klinik işbirliği görüşmek için bize yazın.
-      </p>
+      <p>Ürünlerimiz hakkında bilgi almak, sipariş vermek veya klinik işbirliği görüşmek için bize yazın.</p>
       <div class="contact-items">
-        <div class="contact-item">
-          <div class="contact-icon">📍</div>
-          <div>
-            <div class="contact-label">Adres</div>
-            <div class="contact-value">Ankara, Türkiye</div>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon">📞</div>
-          <div>
-            <div class="contact-label">Telefon</div>
-            <div class="contact-value">İletişim bilgisi eklenecek</div>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon">✉️</div>
-          <div>
-            <div class="contact-label">E-posta</div>
-            <div class="contact-value">info@evergreen.life</div>
-          </div>
-        </div>
+        <div class="contact-item"><div class="contact-icon">📍</div><div><div class="contact-label">Adres</div><div class="contact-value">Ankara, Türkiye</div></div></div>
+        <div class="contact-item"><div class="contact-icon">📞</div><div><div class="contact-label">Telefon</div><div class="contact-value">İletişim bilgisi eklenecek</div></div></div>
+        <div class="contact-item"><div class="contact-icon">✉️</div><div><div class="contact-label">E-posta</div><div class="contact-value">info@evergreen.life</div></div></div>
       </div>
     </div>
-
     <div class="contact-form reveal reveal-d2">
       <div class="form-row">
-        <div class="form-group">
-          <label>Ad Soyad</label>
-          <input type="text" placeholder="Dr. Ali Güneş" />
-        </div>
-        <div class="form-group">
-          <label>Kurум / Uzmanlık</label>
-          <input type="text" placeholder="Hastane / Klinik" />
-        </div>
+        <div class="form-group"><label>Ad Soyad</label><input type="text" placeholder="Dr. Ali Güneş" /></div>
+        <div class="form-group"><label>Kurum / Uzmanlık</label><input type="text" placeholder="Hastane / Klinik" /></div>
       </div>
-      <div class="form-group">
-        <label>E-posta</label>
-        <input type="email" placeholder="ornek@kurum.com" />
-      </div>
-      <div class="form-group">
-        <label>Konu</label>
-        <select>
-          <option>Ürün bilgisi</option>
-          <option>Sipariş & fiyat</option>
-          <option>Klinik işbirliği</option>
-          <option>Diğer</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Mesaj</label>
-        <textarea placeholder="Mesajınızı yazın…"></textarea>
-      </div>
-      <button type="submit" class="btn-primary" style="border:none;cursor:pointer;align-self:flex-start;">Gönder →</button>
-    </form>
+      <div class="form-group"><label>E-posta</label><input type="email" placeholder="ornek@kurum.com" /></div>
+      <div class="form-group"><label>Konu</label><select><option>Ürün bilgisi</option><option>Sipariş & fiyat</option><option>Klinik işbirliği</option><option>Diğer</option></select></div>
+      <div class="form-group"><label>Mesaj</label><textarea placeholder="Mesajınızı yazın…"></textarea></div>
+      <button type="button" class="btn-primary" style="border:none;cursor:pointer;align-self:flex-start;">Gönder →</button>
+    </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-logo">Ever<span>green</span> · Phytocenter</div>
   <div class="footer-copy">© 2025 Zeheri Group Company, Ankara. Tüm hakları saklıdır.</div>
@@ -1002,6 +802,18 @@
 </div><!-- /main-site -->
 
 <script>
+  // ── Slider ──
+  function rotateSlider(id) {
+    const slides = document.querySelectorAll('#' + id + ' .ls-slide');
+    let cur = 0;
+    setInterval(() => {
+      slides[cur].classList.remove('active');
+      cur = (cur + 1) % slides.length;
+      slides[cur].classList.add('active');
+    }, 4500);
+  }
+  rotateSlider('ls-right');
+
   // ── LOGIN ──
   const CREDENTIALS = { user: 'doktor', pass: 'evergreen2025' };
   const overlay   = document.getElementById('login-overlay');
@@ -1030,7 +842,6 @@
     }
   }
 
-  // Check if already logged in this session
   if (sessionStorage.getItem('eg_auth') === '1') {
     overlay.style.display = 'none';
     mainSite.style.display = 'block';
