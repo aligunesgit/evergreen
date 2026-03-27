@@ -60,7 +60,7 @@
       border-radius: 2.5rem;
       padding: 28px;
       height: 560px;
-      display: flex; flex-direction: column; justify-content: flex-end; gap: 14px;
+      display: flex; flex-direction: column; justify-content: flex-start; gap: 14px;
       animation: fadeUp .8s ease both;
     }
     .login-side.left  { animation-delay: .05s; }
@@ -546,8 +546,12 @@
 
   <div class="login-wrapper">
 
-    <!-- Sol Panel: sadece metin, altta -->
+    <!-- Sol Panel: üstte fotoğraf, altta metin -->
     <div class="login-side left">
+      <div class="login-img" id="ls-left">
+        <div class="ls-slide active" style="background-image:url('https://images.unsplash.com/photo-1576086213369-97a306d36557?w=600')"></div>
+        <div class="ls-slide" style="background-image:url('https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?w=600')"></div>
+      </div>
       <div class="side-text-wrap">
         <div class="side-title">Rejeneratif Hücre Gücü</div>
         <div class="side-body">Kök hücre aktivatörleri doku kaybını minimize ederek fibroblast proliferasyonunu ve kollajen sentezini hızlandırır.</div>
@@ -812,6 +816,7 @@
       slides[cur].classList.add('active');
     }, 4500);
   }
+  rotateSlider('ls-left');
   rotateSlider('ls-right');
 
   // ── LOGIN ──
