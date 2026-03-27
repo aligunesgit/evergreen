@@ -76,10 +76,10 @@
     .ls-slide {
       position: absolute; inset: 0;
       background-size: cover; background-position: center;
-      opacity: 0; transition: opacity 1.5s ease, transform 5s ease;
-      transform: scale(1.04);
+      opacity: 0; transition: opacity 1.5s ease;
     }
-    .ls-slide.active { opacity: 1; transform: scale(1); }
+    .ls-slide.active { opacity: 1; }
+    .ls-slide.prev { opacity: 0; }
 
     .side-title {
       font-family: 'DM Sans', sans-serif;
@@ -811,9 +811,11 @@
     const slides = document.querySelectorAll('#' + id + ' .ls-slide');
     let cur = 0;
     setInterval(() => {
-      slides[cur].classList.remove('active');
-      cur = (cur + 1) % slides.length;
-      slides[cur].classList.add('active');
+      const next = (cur + 1) % slides.length;
+      slides[next].classList.add('active');
+      const prev = cur;
+      setTimeout(() => { slides[prev].classList.remove('active'); }, 1500);
+      cur = next;
     }, 4500);
   }
   rotateSlider('ls-left');
